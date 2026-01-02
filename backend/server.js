@@ -1,6 +1,14 @@
 const express = require("express");
 const generateRoute = require("./routes/generate");
+const path = require("path");
 const app = express();
+
 app.use(express.json());
-app.use("/api", generateRoute);
-app.listen(3001, () => console.log("Backend running on port 3001"));
+app.use("/api/generate", generateRoute);
+
+// Serve generated downloads
+app.use("/downloads", express.static(path.join(__dirname, "downloads")));
+
+// Use Render/Heroku port or fallback
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
